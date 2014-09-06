@@ -56,19 +56,19 @@ class bot(ircbot.SingleServerIRCBot):
 
         #---[ OWNER OPTIONS ]---#
         if (author == bot_owner):
-            if nombreArg == 1 and '!exit' == arguments[0]:
+            if (nombreArg == 1 and '!exit' == arguments[0]):
                 serv.disconnect("See you later girls, just need a break !")
-            elif nombreArg == 1 and '!exit' != arguments[0]:
+            elif (nombreArg == 1 and '!exit' != arguments[0]):
                 serv.privmsg(author, "n00b :p !")
-            elif '!say' == arguments[0]:
+            elif ('!say' == arguments[0]):
                 serv.privmsg(arguments[1], message.replace('!say', '')\
                     .replace(arguments[1], '')[2:])
-            elif '!act' == arguments[0]:
+            elif ('!act' == arguments[0]):
                 serv.action(arguments[1], message.replace('!act', '')\
                     .replace(arguments[1], '')[2:])
-            elif '!j' == arguments[0]:
+            elif ('!j' == arguments[0]):
                 serv.join(message[3:])
-            elif '!p' == arguments[0]:
+            elif ('!p' == arguments[0]):
                 serv.part(message[3:])
             else:
                 serv.privmsg(author, "n00b "+author+" ! "
@@ -92,36 +92,36 @@ class bot(ircbot.SingleServerIRCBot):
         droit = randrange(1,9)
 
         #---[ AUTHOR LEVEL ]---#
-        if author in self.owner:
+        if (author in self.owner):
             level = "9"
-        elif author in admin_users:
+        elif (author in admin_users):
             level = "8"
-        elif chan_verif[1].has_user(author)\
-                and chan_verif[1].is_oper(author):
+        elif (chan_verif[1].has_user(author)\
+                and chan_verif[1].is_oper(author)):
             level = "5"
-        elif chan_verif[1].has_user(author)\
-                and chan_verif[1].is_halfoper(author):
+        elif (chan_verif[1].has_user(author)\
+                and chan_verif[1].is_halfoper(author)):
             level = "4"
-        elif chan_verif[1].has_user(author)\
-                and chan_verif[1].is_voiced(author):
+        elif (chan_verif[1].has_user(author)\
+                and chan_verif[1].is_voiced(author)):
             level = "3"
         else:
             level = "1"
 
         #---[ TARGET LEVEL ]---#
-        if nombreArg >= 2:
-            if arguments[1] in self.owner:
+        if (nombreArg >= 2):
+            if (arguments[1] in self.owner):
                 target = "9"
-            elif arguments[1] in admin_users:
+            elif (arguments[1] in admin_users):
                 target = "8"
-            elif chan_verif[1].has_user(arguments[1])\
-                    and chan_verif[1].is_oper(arguments[1]):
+            elif (chan_verif[1].has_user(arguments[1])\
+                    and chan_verif[1].is_oper(arguments[1])):
                 target = "5"
-            elif chan_verif[1].has_user(arguments[1])\
-                    and chan_verif[1].is_halfoper(arguments[1]):
+            elif (chan_verif[1].has_user(arguments[1])\
+                    and chan_verif[1].is_halfoper(arguments[1])):
                 target = "4"
-            elif chan_verif[1].has_user(arguments[1])\
-                    and chan_verif[1].is_voiced(arguments[1]):
+            elif (chan_verif[1].has_user(arguments[1])\
+                    and chan_verif[1].is_voiced(arguments[1])):
                 target = "3"
             else:
                 target = "1"
@@ -159,15 +159,15 @@ class bot(ircbot.SingleServerIRCBot):
                 break
 
         #---[ HELP ]---#
-        if "!help" == arguments[0] and level > "2" and nombreArg == 1:
+        if ("!help" == arguments[0] and level > "2" and nombreArg == 1):
             for x in range(0, 65):
                 serv.privmsg(author, help[x])
                 x = x + 1
 
         #---[ DATABASE ]---#
-        if "!add" == arguments[0] and level > "2":
-            if author in team_users:
-                if nombreArg == 1:
+        if ("!add" == arguments[0] and level > "2"):
+            if (author in team_users):
+                if (nombreArg == 1):
                     error_message()
                 else:
                     try:
@@ -245,7 +245,7 @@ class bot(ircbot.SingleServerIRCBot):
         #---[ IP FINDER ]---#
         def ip():
             arg = message[4:].replace(' ', '')
-            if arg.replace('.', '').isdigit():
+            if (arg.replace('.', '').isdigit()):
                 info = arg
             else:
                 try:
@@ -258,7 +258,7 @@ class bot(ircbot.SingleServerIRCBot):
                 except (HTTPError,ValueError,IOError) as e:
                     serv.privmsg(chan, str(e))
                     pass
-            if info.replace('.', '').isdigit():
+            if (info.replace('.', '').isdigit()):
                 try:
                     data = loads(urlopen("http://api.geoips.com/ip/"+info+\
                         "/key/"+geoips_api_key+\
@@ -288,7 +288,7 @@ class bot(ircbot.SingleServerIRCBot):
                 id = message[5:].replace(' ', '+')
                 soup = BeautifulSoup.BeautifulSoup(urlopen(\
                     "https://www.sous-titres.eu/search.html?q="+id))
-                if not soup.findAll('li', 'noResult'):
+                if not (soup.findAll('li', 'noResult')):
                     for items in soup.findAll('h3'):
                         link = items.find('a')
                         link.get('href')
@@ -310,7 +310,7 @@ class bot(ircbot.SingleServerIRCBot):
                 id = message[5:].replace(' ', '+')
                 soup = BeautifulSoup.BeautifulSoup(urlopen(\
                     "http://www.subsynchro.com/?q="+id))
-                if not soup.find('li', 'aucun'):
+                if not (soup.find('li', 'aucun')):
                     for items in soup.findAll('li', 'col1'):
                         link = items.find('a')
                         link.get('href')
@@ -332,7 +332,7 @@ class bot(ircbot.SingleServerIRCBot):
                 id = message[6:].replace(' ', '+')
                 soup = BeautifulSoup.BeautifulSoup(urlopen(\
                     "http://www.imdb.com/find?q="+id+"&s=tt"))
-                if not soup.findAll('div', 'findNoResults'):
+                if not (soup.findAll('div', 'findNoResults')):
                     for items in soup.findAll('td', 'result_text'):
                         link = items.find('a')
                         link.get('href')
@@ -354,7 +354,7 @@ class bot(ircbot.SingleServerIRCBot):
                 id = message[6:].replace(' ', '+')
                 soup = BeautifulSoup.BeautifulSoup(urlopen\
                     ("http://www.themoviedb.org/search/movie?query="+id))
-                if soup.findAll('ul', 'search_results movie'):
+                if (soup.findAll('ul', 'search_results movie')):
                     for items in soup.findAll('div', 'poster'):
                         link = items.find("a")
                         data = items.find("img")
@@ -380,7 +380,7 @@ class bot(ircbot.SingleServerIRCBot):
                 id = message[4:].replace(' ', '+')
                 soup = BeautifulSoup.BeautifulSoup(urlopen(
                     "http://www.themoviedb.org/search/tv?query="+id))
-                if soup.findAll('ul', 'search_results tv'):
+                if (soup.findAll('ul', 'search_results tv')):
                     for items in soup.findAll('div', 'poster'):
                         link = items.find("a")
                         data = items.find("img")
@@ -406,7 +406,7 @@ class bot(ircbot.SingleServerIRCBot):
                 id = message[6:].replace(' ', '+')
                 soup = BeautifulSoup.BeautifulSoup(urlopen(\
                     "http://www.allocine.fr/recherche/1/?q="+id))
-                if not soup.findAll('script', id='noresults'):
+                if not (soup.findAll('script', id='noresults')):
                     for items in soup.findAll('div', 'vmargin10t'):
                         link = items.find("a")
                         data = items.find("img")
@@ -455,8 +455,8 @@ class bot(ircbot.SingleServerIRCBot):
 
         #---[ UTILITAIRES PROCESS ]---#
         for option in utils:
-            if option == arguments[0] and level > "2":
-                if nombreArg == 1:
+            if (option == arguments[0] and level > "2"):
+                if (nombreArg == 1):
                     error_message()
                     break
                 else:
@@ -470,7 +470,7 @@ class bot(ircbot.SingleServerIRCBot):
 
         #---[ BAD WORDS ]---#
         for mot in bad:
-            if mot in message.lower() :
+            if (mot in message.lower()):
                 serv.kick(
                     chan, author, "w00ps, you said something wrong,"\
                     " <"+mot+"> is not allowed here !")
@@ -503,20 +503,20 @@ class bot(ircbot.SingleServerIRCBot):
             self.quizz = None
             self.timer = None
 
-        if '!quizz' == arguments[0] and level > "2":
-            if self.timer != None:
+        if ('!quizz' == arguments[0] and level > "2"):
+            if (self.timer != None):
                 serv.privmsg(
                     chan, "n00b "+author+" ! A quizz is already running :p")
             else:
-                if nombreArg == 1:
+                if (nombreArg == 1):
                     import time, random, threading
                     select_question()
                 else:
                     error_message()
 
         try:
-            if self.quizz[1].replace('-', ' ').replace('.', '').strip()\
-                    .lower() == message.replace('-', ' ').strip().lower():
+            if (self.quizz[1].replace('-', ' ').replace('.', '').strip()\
+                    .lower() == message.replace('-', ' ').strip().lower()):
                 serv.privmsg(
                     chan, "Bien joué "+author+" ! La bonne réponse"\
                         " est bien : "+self.quizz[1])
@@ -527,15 +527,15 @@ class bot(ircbot.SingleServerIRCBot):
             pass
 
         #---[ QUOTE ]---#
-        if '!quote' == arguments[0] and level > "2":
-            if (nombreArg == 2) and ((chan_verif[1].has_user(arguments[1]))\
-                    or (arguments[1] in self.owner)\
-                    or (arguments[1] in admin_users)):
+        if ('!quote' == arguments[0] and level > "2"):
+            if (nombreArg == 2 and (chan_verif[1].has_user(arguments[1])\
+                    or arguments[1] in self.owner\
+                    or arguments[1] in admin_users)):
                 try:
                     cur.execute("SELECT * FROM quote WHERE user = %s ORDER "\
                         "BY RAND() LIMIT 1", arguments[1])
                     record = cur.fetchone()
-                    if not record:
+                    if not (record):
                         nothing_message()
                     else:
                         serv.privmsg(chan, record[2])
@@ -543,11 +543,11 @@ class bot(ircbot.SingleServerIRCBot):
                     serv.privmsg(chan, "MySql Error : "+str(e))
                     pass
                 cur.close()
-            elif nombreArg == 1:
+            elif (nombreArg == 1):
                 try:
                     cur.execute("SELECT * FROM quote ORDER BY RAND() LIMIT 1")
                     record = cur.fetchone()
-                    if not record:
+                    if not (record):
                         nothing_message()
                     else:
                         serv.privmsg(chan, record[2])
@@ -556,17 +556,17 @@ class bot(ircbot.SingleServerIRCBot):
                     pass
                 cur.close()
             else:
-                if nombreArg != 3:
+                if (nombreArg != 3):
                     error_message()
-                elif (chan_verif[1].has_user(arguments[1]))\
-                        or (arguments[1] in self.owner)\
-                        or (arguments[1] in admin_users):
-                    if arguments[2] == "all":
+                elif (chan_verif[1].has_user(arguments[1])\
+                        or arguments[1] in self.owner\
+                        or arguments[1] in admin_users):
+                    if (arguments[2] == "all"):
                         try:
                             cur.execute("SELECT * FROM quote WHERE user ="\
                                 " %s", arguments[1])
                             record = cur.fetchall()
-                            if not record:
+                            if not (record):
                                 nothing_message()
                             else:
                                 for row in record:
@@ -577,13 +577,13 @@ class bot(ircbot.SingleServerIRCBot):
                             serv.privmsg(chan, "MySql Error : "+str(e))
                             pass
                         cur.close()
-                    elif arguments[2].isdigit():
+                    elif (arguments[2].isdigit()):
                         try:
                             cur.execute("SELECT * FROM quote WHERE user ="\
                                 " %s ORDER BY id ASC LIMIT %s,1",\
                                 [arguments[1],int(arguments[2])-1])
                             record = cur.fetchone()
-                            if not record:
+                            if not (record):
                                 nothing_message()
                             else:
                                 serv.privmsg(chan, record[2])
@@ -597,19 +597,19 @@ class bot(ircbot.SingleServerIRCBot):
                     unknow_message()
 
         #---[ QUOTE_ADD ]---#
-        if '!quoteadd' == arguments[0] and level > "2":
-            if nombreArg <= 2:
+        if ('!quoteadd' == arguments[0] and level > "2"):
+            if (nombreArg <= 2):
                 error_message()
-            elif (chan_verif[1].has_user(arguments[1]))\
-                    or (arguments[1] in self.owner)\
-                    or (arguments[1] in admin_users):
+            elif (chan_verif[1].has_user(arguments[1])\
+                    or arguments[1] in self.owner\
+                    or arguments[1] in admin_users):
                 try:
                     cur.execute("SELECT * FROM quote WHERE user = %s"\
                         " AND text = %s", [arguments[1],\
                         arguments[1]+" : "+message.replace('!quoteadd', '')\
                         .replace(arguments[1], '')[2:]])
                     record = cur.fetchone()
-                    if not record:
+                    if not (record):
                         try:
                             cur.execute("INSERT INTO quote(user, text,"\
                                 " author)VALUES(%s, %s, %s)",\
@@ -634,18 +634,18 @@ class bot(ircbot.SingleServerIRCBot):
                 unknow_message()
 
         #---[ QUOTE_DEL ]---#
-        if '!quotedel' == arguments[0] and level == "9":
+        if ('!quotedel' == arguments[0] and level == "9"):
             if nombreArg != 3:
                 error_message()
-            elif (chan_verif[1].has_user(arguments[1]))\
-                    or (arguments[1] in self.owner)\
-                    or (arguments[1] in admin_users):
-                if arguments[2] == "all":
+            elif (chan_verif[1].has_user(arguments[1])\
+                    or arguments[1] in self.owner\
+                    or arguments[1] in admin_users):
+                if (arguments[2] == "all"):
                     try:
                         cur.execute("SELECT * FROM quote WHERE user ="\
                             " %s", arguments[1])
                         record = cur.fetchall()
-                        if not record:
+                        if not (record):
                             serv.privmsg(
                                 chan, "n00b "+author+" ! This user "\
                                 "doesn't have quotes !")
@@ -663,13 +663,13 @@ class bot(ircbot.SingleServerIRCBot):
                         serv.privmsg(chan, "MySql Error : "+str(e))
                         pass
                     cur.close()
-                elif arguments[2].isdigit():
+                elif (arguments[2].isdigit()):
                     try:
                         cur.execute("SELECT * FROM quote WHERE user = %s"\
                             " ORDER BY id ASC LIMIT %s,1",\
                             [arguments[1],int(arguments[2])-1])
                         record = cur.fetchone()
-                        if not record:
+                        if not (record):
                             serv.privmsg(
                                 chan, "n00b "+author+" ! "\
                                 "This quote doesn't exist !")
@@ -692,22 +692,22 @@ class bot(ircbot.SingleServerIRCBot):
                     error_message()
             else:
                 unknow_message()
-        elif '!quotedel' == arguments[0] and level <= "8":
+        elif ('!quotedel' == arguments[0] and level <= "8"):
             powa_message()
 
         #---[ BEER ]---#
-        if '!beer' == arguments[0] and level > "2":
-            if nombreArg == 1:
+        if ('!beer' == arguments[0] and level > "2"):
+            if (nombreArg == 1):
                 serv.privmsg(chan, author+" boit une bière en juif !")
             elif (arguments[1] == "all"):
                 serv.privmsg(chan, author+" paye sa tournée de bière !")
             elif (author == arguments[1]):
                 n00b_message()
-            elif (droit == 1) or (droit == 2):
+            elif (droit == 1 or droit == 2):
                 serv.privmsg(
                     chan, "Oups "+arguments[1]+" a trop bu de bière "\
                     "today ! "+author+" prend la relève !")
-            elif (droit == 3) or (droit == 4):
+            elif (droit == 3 or droit == 4):
                 serv.privmsg(
                     chan, "Oula "+arguments[1]+" est complètement bourré"\
                     " ! "+author+" se sauve avec le pack !")
@@ -716,18 +716,18 @@ class bot(ircbot.SingleServerIRCBot):
                     chan, author+" paye une bière à "+arguments[1]+" !")
 
         #---[ BEDO ]---#
-        if '!bedo' == arguments[0] and level > "2":
-            if nombreArg == 1:
+        if ('!bedo' == arguments[0] and level > "2"):
+            if (nombreArg == 1):
                 serv.privmsg(chan, author+" fume un bédo en juif !")
             elif (arguments[1] == "all"):
                 serv.privmsg(chan, author+" paye sa tournée de weed !")
             elif (author == arguments[1]):
                 n00b_message()
-            elif (droit == 1) or (droit == 2):
+            elif (droit == 1 or droit == 2):
                 serv.privmsg(
                     chan, "Oups "+arguments[1]+" a trop fumé today"\
                     " ! "+author+" reprend son du !")
-            elif (droit == 3) or (droit == 4):
+            elif (droit == 3 or droit == 4):
                 serv.privmsg(
                     chan, "Oula "+arguments[1]+" est complètement défoncé"\
                     " ! "+author+" se sauve avec la fume !")
@@ -736,9 +736,9 @@ class bot(ircbot.SingleServerIRCBot):
                     chan, author+" paye un bédo à "+arguments[1]+" !")
 
         #---[ SEX ]---#
-        if '!sex' == arguments[0] and level > "2":
+        if ('!sex' == arguments[0] and level > "2"):
             action = randrange(0,len(sex))
-            if nombreArg == 1:
+            if (nombreArg == 1):
                 serv.privmsg(
                     chan, "OMG "+author+" est en manque !"\
                     " Go buy a toy baby, ça ira mieux :p")
@@ -754,9 +754,9 @@ class bot(ircbot.SingleServerIRCBot):
                 serv.privmsg(chan, author+" "+sex[action]+arguments[1])
 
         #---[ SLAP ]---#
-        if '!slap' == arguments[0] and level > "2":
+        if ('!slap' == arguments[0] and level > "2"):
             action = randrange(0,len(slap))
-            if nombreArg == 1:
+            if (nombreArg == 1):
                 serv.action(chan, "slaps "+author+" "+slap[action])
             elif (arguments[1] == "all"):
                 serv.privmsg(chan, author+" slaps le chan "+slap[action])
@@ -771,9 +771,9 @@ class bot(ircbot.SingleServerIRCBot):
                     chan, author+" slaps "+arguments[1]+" "+slap[action])
 
         #---[ HIT ]---#
-        if '!hit' == arguments[0] and level > "2":
+        if ('!hit' == arguments[0] and level > "2"):
             action = randrange(0,len(hit))
-            if nombreArg == 1:
+            if (nombreArg == 1):
                 serv.action(chan, hit[action]+author)
             elif (arguments[1] == "all"):
                 serv.privmsg(chan, author+" "+hit[action]+"tout le monde !")
@@ -787,8 +787,8 @@ class bot(ircbot.SingleServerIRCBot):
                 serv.privmsg(chan, author+" "+hit[action]+arguments[1])
 
         #---[ BIFFLE ]---#
-        if '!bif' == arguments[0] and level > "2":
-            if nombreArg == 1:
+        if ('!bif' == arguments[0] and level > "2"):
+            if (nombreArg == 1):
                 serv.action(chan, " biffle "+author+" !")
             elif (arguments[1] == "all"):
                 serv.privmsg(chan, author+" biffle le chan !")
@@ -802,9 +802,9 @@ class bot(ircbot.SingleServerIRCBot):
                 serv.privmsg(chan, author+" biffle "+arguments[1])
 
         #---[ KISS ]---#
-        if '!kiss' == arguments[0] and level > "2":
+        if ('!kiss' == arguments[0] and level > "2"):
             action = randrange(0,len(kiss))
-            if nombreArg == 1:
+            if (nombreArg == 1):
                 serv.action(chan, "w00t... pas de bisous pour "+author)
             elif (arguments[1] == "all"):
                 serv.privmsg(chan, author+" paye sa tournée de bisous !")
@@ -814,8 +814,8 @@ class bot(ircbot.SingleServerIRCBot):
                 serv.privmsg(chan, author+" "+kiss[action]+arguments[1])
 
         #---[ CAFE ]---#
-        if '!caf' == arguments[0] and level > "2":
-            if nombreArg == 1:
+        if ('!caf' == arguments[0] and level > "2"):
+            if (nombreArg == 1):
                 serv.privmsg(chan, "pas de café pour "+author+" !")
             elif (arguments[1] == "all"):
                 serv.privmsg(chan, author+" paye sa tournée de kawa !")
@@ -825,8 +825,8 @@ class bot(ircbot.SingleServerIRCBot):
                 serv.privmsg(chan, author+" paye son café à "+arguments[1])
 
         #---[ HUG ]---#
-        if '!hug' == arguments[0] and level > "2":
-            if nombreArg == 1:
+        if ('!hug' == arguments[0] and level > "2"):
+            if (nombreArg == 1):
                 serv.privmsg(chan, "pas de calin pour "+author+" !")
             elif (arguments[1] == "all"):
                 serv.privmsg(chan, author+" fait un gros calin au chan !")
@@ -836,8 +836,8 @@ class bot(ircbot.SingleServerIRCBot):
                 serv.privmsg(chan, author+" caline "+arguments[1])
 
         #---[ CHAMP ]---#
-        if '!champ' == arguments[0] and level > "2":
-            if nombreArg == 1:
+        if ('!champ' == arguments[0] and level > "2"):
+            if (nombreArg == 1):
                 serv.privmsg(chan, "pas de champagne pour "+author+" !")
             elif (arguments[1] == "all"):
                 serv.privmsg(chan, author+" paye sa tournée de champagne !")
@@ -848,8 +848,8 @@ class bot(ircbot.SingleServerIRCBot):
                     chan, author+" paye le champagne à "+arguments[1])
 
         #---[ WOMP ]---#
-        if '!womp' == arguments[0] and level > "2":
-            if nombreArg == 1:
+        if ('!womp' == arguments[0] and level > "2"):
+            if (nombreArg == 1):
                 serv.privmsg(chan, "http://wompwompwomp.com/ "+author+" :p")
             elif (author == arguments[1]):
                 n00b_message()
@@ -858,8 +858,8 @@ class bot(ircbot.SingleServerIRCBot):
                     chan, "http://wompwompwomp.com/ "+arguments[1]+" :p")
 
         #---[ GG ]---#
-        if '!gg' == arguments[0] and level > "2":
-            if nombreArg == 1:
+        if ('!gg' == arguments[0] and level > "2"):
+            if (nombreArg == 1):
                 error_message()
             elif (arguments[1] == "all"):
                 serv.privmsg(chan, "GG tout le monde !")
@@ -869,15 +869,15 @@ class bot(ircbot.SingleServerIRCBot):
                 serv.privmsg(chan, "Bien joué "+arguments[1]+" ! Congrats !")
 
         #---[ OUT ]---#
-        if '!out' == arguments[0] and level > "2":
-            if nombreArg == 1:
+        if ('!out' == arguments[0] and level > "2"):
+            if (nombreArg == 1):
                 serv.privmsg(chan, author+" is out !")
             else:
                 error_message()
 
         #---[ ISOUT ]---#
-        if '!isout' == arguments[0] and level > "2":
-            if nombreArg == 1:
+        if ('!isout' == arguments[0] and level > "2"):
+            if (nombreArg == 1):
                 error_message()
             elif (author == arguments[1]):
                 n00b_message()
@@ -889,36 +889,36 @@ class bot(ircbot.SingleServerIRCBot):
         #---------------------#
 
         #---[ EXEMPT ]---#
-        if '!e' == arguments[0] and level > "3":
-            if nombreArg == 1:
+        if ('!e' == arguments[0] and level > "3"):
+            if (nombreArg == 1):
                 error_message()
             else:
                 serv.mode(chan, "+e "+arguments[1])
-        elif '!e' == arguments[0] and level <= "3":
+        elif ('!e' == arguments[0] and level <= "3"):
             powa_message()
 
         #---[ REMOVE EXEMPT ]---#
-        if '!de' == arguments[0] and level > "3":
-            if nombreArg == 1:
+        if ('!de' == arguments[0] and level > "3"):
+            if (nombreArg == 1):
                 error_message()
-            elif level >= target:
+            elif (level >= target):
                 serv.mode(chan, "-e "+arguments[1])
             else:
                 serv.privmsg(
                     chan, author+" is not allowed to "\
                     "remove "+arguments[1]+" exempt !")
-        elif '!de' == arguments[0] and level <= "3":
+        elif ('!de' == arguments[0] and level <= "3"):
             powa_message()
 
         #---[ KICK ]---#
-        if '!k' == arguments[0] and level > "3":
+        if ('!k' == arguments[0] and level > "3"):
             if nombreArg == 1:
                 error_message()
-            elif (chan_verif[1].has_user(arguments[1]))\
-                    or (arguments[1] in self.owner)\
-                    or (arguments[1] in admin_users):
-                if level >= target:
-                    if nombreArg == 2:
+            elif (chan_verif[1].has_user(arguments[1])\
+                    or arguments[1] in self.owner\
+                    or arguments[1] in admin_users):
+                if (level >= target):
+                    if (nombreArg == 2):
                         serv.kick(chan_verif[0], arguments[1], author)
                     else:
                         serv.kick(
@@ -931,41 +931,41 @@ class bot(ircbot.SingleServerIRCBot):
                         " kick "+arguments[1]+" !")
             else:
                 unknow_message()
-        elif '!k' == arguments[0] and level <= "3":
+        elif ('!k' == arguments[0] and level <= "3"):
             powa_message()
 
         #---[ BAN ]---#
-        if '!b' == arguments[0] and level > "3":
-            if nombreArg == 1:
+        if ('!b' == arguments[0] and level > "3"):
+            if (nombreArg == 1):
                 error_message()
-            elif level >= target:
+            elif (level >= target):
                 serv.mode(chan_verif[0], "+b "+arguments[1])
             else:
                 serv.privmsg(
                     chan, author+" is not allowed to "\
                     "ban "+arguments[1]+" !")
-        elif '!b' == arguments[0] and level <= "3":
+        elif ('!b' == arguments[0] and level <= "3"):
             powa_message()
 
         #---[ UNBAN ]---#
-        if '!db' == arguments[0] and level > "3":
-            if nombreArg == 1:
+        if ('!db' == arguments[0] and level > "3"):
+            if (nombreArg == 1):
                 error_message()
-            elif level >= target:
+            elif (level >= target):
                 serv.mode(chan_verif[0], "-b "+arguments[1])
             else:
                 serv.privmsg(
                     chan, author+" is not allowed to "\
                     "removes "+arguments[1]+" ban !")
-        elif '!db' == arguments[0] and level <= "3":
+        elif ('!db' == arguments[0] and level <= "3"):
             powa_message()
 
         #---[ KICK & BAN ]---#
-        if '!kb' == arguments[0] and level > "3":
+        if ('!kb' == arguments[0] and level > "3"):
             if nombreArg == 1:
                 error_message()
-            elif level >= target:
-                if nombreArg == 2:
+            elif (level >= target):
+                if (nombreArg == 2):
                     serv.mode(chan_verif[0], "ban "+arguments[1])
                     serv.kick(chan_verif[0], arguments[1], author)
                 else:
@@ -982,136 +982,136 @@ class bot(ircbot.SingleServerIRCBot):
             powa_message()
 
         #---[ VOICE ]---#
-        if '!v' == arguments[0] and level > "3":
-            if nombreArg == 1:
+        if ('!v' == arguments[0] and level > "3"):
+            if (nombreArg == 1):
                 error_message()
-            elif (chan_verif[1].has_user(arguments[1]))\
-                    or (arguments[1] in self.owner)\
-                    or (arguments[1] in admin_users):
-                if level >= target:
+            elif (chan_verif[1].has_user(arguments[1])\
+                    or arguments[1] in self.owner\
+                    or arguments[1] in admin_users):
+                if (level >= target):
                     serv.mode(chan_verif[0], "+v "+arguments[1])
                 else:
                     modif_powa_message()
             else:
                 unknow_message()
-        elif '!v' == arguments[0] and level <= "3":
+        elif ('!v' == arguments[0] and level <= "3"):
             powa_message()
 
         #---[ REMOVE VOICE ]---#
-        if '!dv' == arguments[0] and level > "3":
-            if nombreArg == 1:
+        if ('!dv' == arguments[0] and level > "3"):
+            if (nombreArg == 1):
                 error_message()
-            elif (chan_verif[1].has_user(arguments[1]))\
-                    or (arguments[1] in self.owner)\
-                    or (arguments[1] in admin_users):
-                if level >= target:
+            elif (chan_verif[1].has_user(arguments[1])\
+                    or arguments[1] in self.owner\
+                    or arguments[1] in admin_users):
+                if (level >= target):
                     serv.mode(chan_verif[0], "-v "+arguments[1])
                 else:
                     modif_powa_message()
             else:
                 unknow_message()
-        elif '!dv' == arguments[0] and level <= "3":
+        elif ('!dv' == arguments[0] and level <= "3"):
             powa_message()
 
         #---[ HOP ]---#
-        if '!h' == arguments[0] and level > "3":
-            if nombreArg == 1:
+        if ('!h' == arguments[0] and level > "3"):
+            if (nombreArg == 1):
                 error_message()
-            elif (chan_verif[1].has_user(arguments[1]))\
-                    or (arguments[1] in self.owner)\
-                    or (arguments[1] in admin_users):
-                if level >= target:
+            elif (chan_verif[1].has_user(arguments[1])\
+                    or arguments[1] in self.owner\
+                    or arguments[1] in admin_users):
+                if (level >= target):
                     serv.mode(chan_verif[0], "+h "+arguments[1])
                 else:
                     modif_powa_message()
             else:
                 unknow_message()
-        elif '!h' == arguments[0] and level <= "3":
+        elif ('!h' == arguments[0] and level <= "3"):
             powa_message()
 
         #---[ REMOVE HOP ]---#
-        if '!dh' == arguments[0] and level > "3":
-            if nombreArg == 1:
+        if ('!dh' == arguments[0] and level > "3"):
+            if (nombreArg == 1):
                 error_message()
-            elif (chan_verif[1].has_user(arguments[1]))\
-                    or (arguments[1] in self.owner)\
-                    or (arguments[1] in admin_users):
-                if level >= target:
+            elif (chan_verif[1].has_user(arguments[1])\
+                    or arguments[1] in self.owner\
+                    or arguments[1] in admin_users):
+                if (level >= target):
                     serv.mode(chan_verif[0], "-h "+arguments[1])
                 else:
                     modif_powa_message()
             else:
                 unknow_message()
-        elif '!dh' == arguments[0] and level <= "3":
+        elif ('!dh' == arguments[0] and level <= "3"):
             powa_message()
 
         #---[ OP ]---#
-        if '!op' == arguments[0] and level > "4":
-            if nombreArg == 1:
+        if ('!op' == arguments[0] and level > "4"):
+            if (nombreArg == 1):
                 error_message()
-            elif (chan_verif[1].has_user(arguments[1]))\
-                    or (arguments[1] in self.owner)\
-                    or (arguments[1] in admin_users):
-                if level >= target:
+            elif (chan_verif[1].has_user(arguments[1])\
+                    or arguments[1] in self.owner\
+                    or arguments[1] in admin_users):
+                if (level >= target):
                     serv.mode(chan_verif[0], "+o "+arguments[1])
                 else:
                     modif_powa_message()
             else:
                 unknow_message()
-        elif '!op' == arguments[0] and level <= "4":
+        elif ('!op' == arguments[0] and level <= "4"):
             powa_message()
 
         #---[ REMOVE OP ]---#
-        if '!deop' == arguments[0] and level > "4":
-            if nombreArg == 1:
+        if ('!deop' == arguments[0] and level > "4"):
+            if (nombreArg == 1):
                 error_message()
-            elif (chan_verif[1].has_user(arguments[1]))\
-                    or (arguments[1] in self.owner)\
-                    or (arguments[1] in admin_users):
-                if level >= target:
+            elif (chan_verif[1].has_user(arguments[1])\
+                    or arguments[1] in self.owner\
+                    or arguments[1] in admin_users):
+                if (level >= target):
                     serv.mode(chan_verif[0], "-o "+arguments[1])
                 else:
                     modif_powa_message()
             else:
                 unknow_message()
-        elif '!deop' == arguments[0] and level <= "4":
+        elif ('!deop' == arguments[0] and level <= "4"):
             powa_message()
 
         #---[ ADMIN ]---#
-        if '!a' == arguments[0] and level > "5":
-            if nombreArg == 1:
+        if ('!a' == arguments[0] and level > "5"):
+            if (nombreArg == 1):
                 error_message()
-            elif level >= target:
+            elif (level >= target):
                 serv.mode(chan_verif[0], "+a "+arguments[1])
             else:
                 modif_powa_message()
-        elif '!a' == arguments[0] and level <= "5":
+        elif ('!a' == arguments[0] and level <= "5"):
             powa_message()
 
         #---[ REMOVE ADMIN ]---#
-        if '!da' == arguments[0] and level > "5":
-            if nombreArg == 1:
+        if ('!da' == arguments[0] and level > "5"):
+            if (nombreArg == 1):
                 error_message()
-            elif (chan_verif[1].has_user(arguments[1]))\
-                    or (arguments[1] in self.owner)\
-                    or (arguments[1] in admin_users):
-                if level >= target:
+            elif (chan_verif[1].has_user(arguments[1])\
+                    or arguments[1] in self.owner\
+                    or arguments[1] in admin_users):
+                if (level >= target):
                     serv.mode(chan_verif[0], "-a "+arguments[1])
                 else:
                     modif_powa_message()
             else:
                 unknow_message()
-        elif '!da' == arguments[0] and level <= "5":
+        elif ('!da' == arguments[0] and level <= "5"):
             powa_message()
 
         #---[ ACCESS ]---#
-        if '!ax' == arguments[0] and level > "4":
-            if nombreArg <= 2:
+        if ('!ax' == arguments[0] and level > "4"):
+            if (nombreArg <= 2):
                 error_message()
-            elif (chan_verif[1].has_user(arguments[1]))\
-                    or (arguments[1] in self.owner)\
-                    or (arguments[1] in admin_users):
-                if level >= target:
+            elif (chan_verif[1].has_user(arguments[1])\
+                    or arguments[1] in self.owner\
+                    or arguments[1] in admin_users):
+                if (level >= target):
                     serv.privmsg(
                         "chanserv", "access "+chan_verif[0]+\
                         " add "+arguments[1]+" "+arguments[2])
@@ -1119,17 +1119,17 @@ class bot(ircbot.SingleServerIRCBot):
                     modif_powa_message()
             else:
                 unknow_message()
-        elif '!ax' == arguments[0] and level <= "4":
+        elif ('!ax' == arguments[0] and level <= "4"):
             powa_message()
 
         #---[ REMOVE ACCESS ]---#
-        if '!del' == arguments[0] and level > "4":
-            if nombreArg == 1:
+        if ('!del' == arguments[0] and level > "4"):
+            if (nombreArg == 1):
                 error_message()
-            elif (chan_verif[1].has_user(arguments[1]))\
-                    or (arguments[1] in self.owner)\
-                    or (arguments[1] in admin_users):
-                if level >= target:
+            elif (chan_verif[1].has_user(arguments[1])\
+                    or arguments[1] in self.owner\
+                    or arguments[1] in admin_users):
+                if (level >= target):
                     serv.privmsg(
                         "chanserv", "access "+chan_verif[0]+\
                         " del "+arguments[1])
@@ -1137,7 +1137,7 @@ class bot(ircbot.SingleServerIRCBot):
                     modif_powa_message()
             else:
                 unknow_message()
-        elif '!del' == arguments[0] and level <= "4":
+        elif ('!del' == arguments[0] and level <= "4"):
             powa_message()
 
 if __name__ == "__main__":
