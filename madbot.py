@@ -774,12 +774,12 @@ class bot(ircbot.SingleServerIRCBot):
         if '!hit' == arguments[0] and level > "2":
             action = randrange(0,len(hit))
             if nombreArg == 1:
-                serv.action(chan, hit[action]+" "+author)
+                serv.action(chan, hit[action]+author)
             elif (arguments[1] == "all"):
-                serv.privmsg(chan, author+" "+hit[action]+" tout le monde !")
+                serv.privmsg(chan, author+" "+hit[action]+"tout le monde !")
             elif (arguments[1].lower() == bot_owner and bot_owner != author):
                 serv.action(
-                    chan, hit[action]+" "+author+\
+                    chan, hit[action]+author+\
                     " ! Pas touche à "+bot_owner+" !")
             elif (author == arguments[1]):
                 n00b_message()
