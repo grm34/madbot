@@ -135,7 +135,8 @@ class bot(ircbot.SingleServerIRCBot):
         def powa_message():
             serv.action(
                 chan, "slaps "+author+" ! You are not allowed to use this"\
-                " option ("+error.replace("!", "")+"), you need more powa !")
+                " option ("+arguments[0].replace("!", "")+\
+                "), you need more powa !")
 
         def modif_powa_message():
             serv.action(
