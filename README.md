@@ -92,4 +92,4 @@ Quote usage requires MYSQL Database with table configured like this :
     ON UPDATE CURRENT_TIMESTAMP not null,
     PRIMARY KEY (id));
 
-Go to the [wiki](https://github.com/grm34/madbot/wiki) for installation instructions!
+Go to the [wiki](https://github.com/grm34/madbot/wiki) for installation instructions !
