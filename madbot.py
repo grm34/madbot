@@ -58,8 +58,6 @@ class bot(ircbot.SingleServerIRCBot):
         if (author == bot_owner):
             if (nombreArg == 1 and '!exit' == arguments[0]):
                 serv.disconnect("See you later girls, just need a break !")
-            elif (nombreArg == 1 and '!exit' != arguments[0]):
-                serv.privmsg(author, "n00b :p !")
             elif ('!say' == arguments[0]):
                 serv.privmsg(arguments[1], message.replace('!say', '')\
                     .replace(arguments[1], '')[2:])
