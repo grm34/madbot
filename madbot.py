@@ -14,10 +14,10 @@ import MySQLdb
 import BeautifulSoup
 import json
 import unicodedata
-from urllib2 import urlopen, URLError, HTTPError
+from urllib2 import (urlopen, URLError, HTTPError)
 from json import loads
 from random import randrange
-from django.utils.encoding import smart_str, smart_unicode
+from django.utils.encoding import (smart_str, smart_unicode)
 from settings import settings
 
 (
