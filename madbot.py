@@ -1141,5 +1141,5 @@ class bot(ircbot.SingleServerIRCBot):
         elif ('!del' == arguments[0] and level <= "4"):
             powa_message()
 
-if __name__ == "__main__":
+if (__name__ == "__main__"):
     bot().start()
