@@ -172,11 +172,9 @@ class bot(ircbot.SingleServerIRCBot):
                     try:
                         ID_imdb = arguments[1]
                         ID_user = irclib.nm_to_n(ev.source())
-                        url = database_url
-                        username = database_user
-                        password = database_pass
                         p = urllib2.HTTPPasswordMgrWithDefaultRealm()
-                        p.add_password(None, url, username, password)
+                        p.add_password(None, database_url,
+                                       database_user, database_pass)
                         handler = urllib2.HTTPBasicAuthHandler(p)
                         opener = urllib2.build_opener(handler)
                         urllib2.install_opener(opener)
