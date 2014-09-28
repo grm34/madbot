@@ -54,6 +54,7 @@ def settings():
     database_user = ""
     database_pass = ""
     database_url = ""
+    kill_bit = ""
 
     team_users = [
         "", "", "", "", "", "", ""

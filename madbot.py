@@ -26,7 +26,8 @@ from django.utils.encoding import (smart_str, smart_unicode)
     channels, nickserv_pass, mysql_host, mysql_user, mysql_pass,
     mysql_db, meteo_api_key, geoips_api_key, google_api_key,
     admin_users, database_user, database_pass, database_url,
-    team_users, bad, slap, hit, sex, kiss, options, utils, help
+    team_users, bad, slap, hit, sex, kiss, options, utils, help,
+    kill_bot
 ) = settings()
 
 
@@ -59,9 +60,7 @@ class bot(ircbot.SingleServerIRCBot):
 
         # OWNER OPTIONS
         if (author == bot_owner):
-            if (nombreArg == 1 and '!exit' == arguments[0]):
-                serv.disconnect("See you later girls, just need a break !")
-            elif ('!say' == arguments[0]):
+            if ('!say' == arguments[0]):
                 serv.privmsg(arguments[1], message.replace('!say', '')\
                     .replace(arguments[1], '')[2:])
             elif ('!act' == arguments[0]):
@@ -171,6 +170,11 @@ class bot(ircbot.SingleServerIRCBot):
             uptime_raw = round(time.time() - self.start_time)
             uptime = timedelta(seconds=uptime_raw)
             serv.privmsg(chan, "\x02Uptime\x02: up {}".format(uptime))
+
+        if (author == bot_owner and nombreArg == 1 and '!exit' == arguments[0]):
+            serv.disconnect("See you later girls, just need a break !")
+            if (kill_bot):
+                os.system(kill_bot)
 
         # DATABASE
         if ("!add" == arguments[0] and level > "2"):
