@@ -134,6 +134,7 @@ def settings():
         "   !meteo   + 'city'          => weather forecast",
         "   !dist    + 'city / city'   => distance between cities",
         "   !ip      + 'ip' or+ 'ndd'  => ip/ndd location finder",
+        "   !uptime                    => seen bot uptime",
         "                                                               ",
         ">----------[ FANTASY ]----------------------------------------<",
         "                                                               ",

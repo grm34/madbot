@@ -1,24 +1,25 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-#--------------------  [O_o]  ---------------------#
-#     Made with love by grm34 (FRIPOUILLEJACK)     #
-#     ........fripouillejack@gmail.com .......     #
-#--------------------------------------------------#
+#--------------------  [O_o]  ---------------------
+#     Made with love by grm34 (FRIPOUILLEJACK)
+#     ........fripouillejack@gmail.com .......
+#--------------------------------------------------
 
+import json
 import irclib
 import ircbot
 import urllib
 import urllib2
 import MySQLdb
-import BeautifulSoup
-import json
 import unicodedata
-from urllib2 import (urlopen, URLError, HTTPError)
+import BeautifulSoup
 from json import loads
 from random import randrange
-from django.utils.encoding import (smart_str, smart_unicode)
 from settings import settings
+from datetime import (datetime, timedelta)
+from urllib2 import (urlopen, URLError, HTTPError)
+from django.utils.encoding import (smart_str, smart_unicode)
 
 (
     bot_owner, bot_name, bot_description, server_irc, server_port,
@@ -28,6 +29,7 @@ from settings import settings
     team_users, bad, slap, hit, sex, kiss, options, utils, help
 ) = settings()
 
+
 class bot(ircbot.SingleServerIRCBot):
 
     def __init__(self):
@@ -36,10 +38,11 @@ class bot(ircbot.SingleServerIRCBot):
                 bot_name, bot_description)
 
         self.owner = [bot_owner, bot_name]
+        self.start_time = time.time()
         self.timer = None
 
     def on_welcome(self, serv, ev):
-        serv.privmsg("nickserv", "identify "+nickserv_pass)
+        serv.privmsg("nickserv", "identify {0}".format(nickserv_pass))
         serv.privmsg("chanserv", "set irc_auto_rejoin ON")
         serv.privmsg("chanserv", "set irc_join_delay 0")
         serv.join(channels)
@@ -54,7 +57,7 @@ class bot(ircbot.SingleServerIRCBot):
         arguments = message.split(' ')
         nombreArg = len(arguments)
 
-        #---[ OWNER OPTIONS ]---#
+        # OWNER OPTIONS
         if (author == bot_owner):
             if (nombreArg == 1 and '!exit' == arguments[0]):
                 serv.disconnect("See you later girls, just need a break !")
@@ -89,7 +92,7 @@ class bot(ircbot.SingleServerIRCBot):
         nombreArg = len(arguments)
         droit = randrange(1,9)
 
-        #---[ AUTHOR LEVEL ]---#
+        # AUTHOR LEVEL
         if (author in self.owner):
             level = "9"
         elif (author in admin_users):
@@ -106,7 +109,7 @@ class bot(ircbot.SingleServerIRCBot):
         else:
             level = "1"
 
-        #---[ TARGET LEVEL ]---#
+        # TARGET LEVEL
         if (nombreArg >= 2):
             if (arguments[1] in self.owner):
                 target = "9"
@@ -124,7 +127,7 @@ class bot(ircbot.SingleServerIRCBot):
             else:
                 target = "1"
 
-        #---[ ERRORS MESSAGES ]---#
+        # ERRORS MESSAGES
         def error_message():
             serv.action(
                 chan, "slaps "+author+" ! Bad request ("+arguments[0]\
@@ -157,13 +160,19 @@ class bot(ircbot.SingleServerIRCBot):
                 powa_message()
                 break
 
-        #---[ HELP ]---#
+        # HELP
         if ("!help" == arguments[0] and level > "2" and nombreArg == 1):
-            for x in range(0, 65):
+            for x in range(0, 66):
                 serv.privmsg(author, help[x])
                 x = x + 1
 
-        #---[ DATABASE ]---#
+        # UPTIME
+        if ('!uptime' == arguments[0] and level > "2" and nombreArg == 1):
+            uptime_raw = round(time.time() - self.start_time)
+            uptime = timedelta(seconds=uptime_raw)
+            serv.privmsg(chan, "\x02Uptime\x02: up {}".format(uptime))
+
+        # DATABASE
         if ("!add" == arguments[0] and level > "2"):
             if (author in team_users):
                 if (nombreArg == 1):
@@ -172,9 +181,11 @@ class bot(ircbot.SingleServerIRCBot):
                     try:
                         ID_imdb = arguments[1]
                         ID_user = irclib.nm_to_n(ev.source())
+                        url = database_url
+                        username = database_user
+                        password = database_pass
                         p = urllib2.HTTPPasswordMgrWithDefaultRealm()
-                        p.add_password(None, database_url,
-                                       database_user, database_pass)
+                        p.add_password(None, url, username, password)
                         handler = urllib2.HTTPBasicAuthHandler(p)
                         opener = urllib2.build_opener(handler)
                         urllib2.install_opener(opener)
@@ -194,11 +205,11 @@ class bot(ircbot.SingleServerIRCBot):
                     chan, "slaps "+author+" ! You are not allowed "\
                     "to use this option, only for team members !")
 
-        #------------------#
-        #---  SERVICES  ---#
-        #------------------#
+        #------------------
+        #     SERVICES
+        #------------------
 
-        #---[ METEO ]---#
+        # METEO
         def meteo():
             try:
                 id = message[7:].replace(' ', '+')
@@ -216,7 +227,7 @@ class bot(ircbot.SingleServerIRCBot):
                 serv.privmsg(chan, ("JSON Error : "+str(e)))
                 pass
 
-        #---[ MAPS DISTANCE ]---#
+        # MAPS DISTANCE
         def dist():
             try:
                 id = message[6:].split(' / ')
@@ -239,7 +250,7 @@ class bot(ircbot.SingleServerIRCBot):
                 serv.privmsg(chan, ("JSON Error : "+str(e)))
                 pass
 
-        #---[ IP FINDER ]---#
+        # IP FINDER
         def ip():
             arg = message[4:].replace(' ', '')
             if (arg.replace('.', '').isdigit()):
@@ -279,7 +290,7 @@ class bot(ircbot.SingleServerIRCBot):
             else:
                 nothing_message()
 
-        #---[ SOUS-TITRES.EU ]---#
+        # SOUS-TITRES.EU
         def srt():
             try:
                 id = message[5:].replace(' ', '+')
@@ -301,7 +312,7 @@ class bot(ircbot.SingleServerIRCBot):
                 serv.privmsg(chan, str(e))
                 pass
 
-         #---[ SUB-SYNCHRO ]---#
+         # SUB-SYNCHRO
         def sub():
             try:
                 id = message[5:].replace(' ', '+')
@@ -323,7 +334,7 @@ class bot(ircbot.SingleServerIRCBot):
                 serv.privmsg(chan, str(e))
                 pass
 
-         #---[ IMDB ]---#
+         # IMDB
         def imdb():
             try:
                 id = message[6:].replace(' ', '+')
@@ -345,7 +356,7 @@ class bot(ircbot.SingleServerIRCBot):
                 serv.privmsg(chan, str(e))
                 pass
 
-         #---[ TMDB MOVIES ]---#
+         # TMDB MOVIES
         def tmdb():
             try:
                 id = message[6:].replace(' ', '+')
@@ -371,7 +382,7 @@ class bot(ircbot.SingleServerIRCBot):
                 serv.privmsg(chan, str(e))
                 pass
 
-        #---[ TMDB TV ]---#
+        # TMDB TV
         def tv():
             try:
                 id = message[4:].replace(' ', '+')
@@ -397,7 +408,7 @@ class bot(ircbot.SingleServerIRCBot):
                 serv.privmsg(chan, str(e))
                 pass
 
-        #---[ ALLOCINE ]---#
+        # ALLOCINE
         def allo():
             try:
                 id = message[6:].replace(' ', '+')
@@ -419,38 +430,38 @@ class bot(ircbot.SingleServerIRCBot):
                 serv.privmsg(chan, str(e))
                 pass
 
-         #---[ GOOGLE ]---#
+         # GOOGLE
         def google():
             url = "http://www.google.com/search?q="+message[8:]\
                 .replace(' ', '+')
             serv.privmsg(chan, url)
 
-        #---[ GOOGLE IMAGES ]---#
+        # GOOGLE IMAGES
         def img():
             url = "https://www.google.com/search?site=imghp&tbm=isch&s"\
                 "ource=hp&biw=1920&bih=969&q="+message[5:]\
                 .replace(' ', '+')
             serv.privmsg(chan, url)
 
-        #---[ YOUTUBE ]---#
+        # YOUTUBE
         def tub():
             url = "http://www.youtube.com/results?search_query"\
                 "="+message[5:].replace(' ', '+')
             serv.privmsg(chan, url)
 
-         #---[ DAILYMOTION ]---#
+         # DAILYMOTION
         def daily():
             url = "http://www.dailymotion.com/fr/relevance/search"\
                 "/"+message[7:].replace(' ', '+')
             serv.privmsg(chan, url)
 
-        #---[ SOUNDCLOUD ]---#
+        # SOUNDCLOUD
         def sound():
             url = "https://soundcloud.com/search?q="+message[7:]\
                 .replace(' ', '+')
             serv.privmsg(chan, url)
 
-        #---[ UTILITAIRES PROCESS ]---#
+        # UTILITAIRES PROCESS
         for option in utils:
             if (option == arguments[0] and level > "2"):
                 if (nombreArg == 1):
@@ -461,11 +472,11 @@ class bot(ircbot.SingleServerIRCBot):
                     fonction()
                     break
 
-        #-----------------#
-        #---  FANTASY  ---#
-        #-----------------#
+        #-----------------
+        #     FANTASY
+        #-----------------
 
-        #---[ BAD WORDS ]---#
+        # BAD WORDS
         for mot in bad:
             if (mot in message.lower()):
                 serv.kick(
@@ -473,7 +484,7 @@ class bot(ircbot.SingleServerIRCBot):
                     " <"+mot+"> is not allowed here !")
                 break
 
-        #---[ QUiZZ ]---#
+        # QUiZZ
         def select_question():
             serv.privmsg(chan, "Quizz : vous avez 30 secondes pour répondre"\
                 ", attention à l'orthographe ! Bonne chance !")
@@ -523,7 +534,7 @@ class bot(ircbot.SingleServerIRCBot):
         except (AttributeError, TypeError):
             pass
 
-        #---[ QUOTE ]---#
+        # QUOTE
         if ('!quote' == arguments[0] and level > "2"):
             if (nombreArg == 2 and (chan_verif[1].has_user(arguments[1])\
                     or arguments[1] in self.owner\
@@ -593,7 +604,7 @@ class bot(ircbot.SingleServerIRCBot):
                 else:
                     unknow_message()
 
-        #---[ QUOTE_ADD ]---#
+        # QUOTE_ADD
         if ('!quoteadd' == arguments[0] and level > "2"):
             if (nombreArg <= 2):
                 error_message()
@@ -630,7 +641,7 @@ class bot(ircbot.SingleServerIRCBot):
             else:
                 unknow_message()
 
-        #---[ QUOTE_DEL ]---#
+        # QUOTE_DEL
         if ('!quotedel' == arguments[0] and level == "9"):
             if nombreArg != 3:
                 error_message()
@@ -692,7 +703,7 @@ class bot(ircbot.SingleServerIRCBot):
         elif ('!quotedel' == arguments[0] and level <= "8"):
             powa_message()
 
-        #---[ BEER ]---#
+        # BEER
         if ('!beer' == arguments[0] and level > "2"):
             if (nombreArg == 1):
                 serv.privmsg(chan, author+" boit une bière en juif !")
@@ -712,7 +723,7 @@ class bot(ircbot.SingleServerIRCBot):
                 serv.privmsg(
                     chan, author+" paye une bière à "+arguments[1]+" !")
 
-        #---[ BEDO ]---#
+        # BEDO
         if ('!bedo' == arguments[0] and level > "2"):
             if (nombreArg == 1):
                 serv.privmsg(chan, author+" fume un bédo en juif !")
@@ -732,7 +743,7 @@ class bot(ircbot.SingleServerIRCBot):
                 serv.privmsg(
                     chan, author+" paye un bédo à "+arguments[1]+" !")
 
-        #---[ SEX ]---#
+        # SEX
         if ('!sex' == arguments[0] and level > "2"):
             action = randrange(0,len(sex))
             if (nombreArg == 1):
@@ -750,7 +761,7 @@ class bot(ircbot.SingleServerIRCBot):
             else:
                 serv.privmsg(chan, author+" "+sex[action]+arguments[1])
 
-        #---[ SLAP ]---#
+        # SLAP
         if ('!slap' == arguments[0] and level > "2"):
             action = randrange(0,len(slap))
             if (nombreArg == 1):
@@ -767,7 +778,7 @@ class bot(ircbot.SingleServerIRCBot):
                 serv.privmsg(
                     chan, author+" slaps "+arguments[1]+" "+slap[action])
 
-        #---[ HIT ]---#
+        # HIT
         if ('!hit' == arguments[0] and level > "2"):
             action = randrange(0,len(hit))
             if (nombreArg == 1):
@@ -783,7 +794,7 @@ class bot(ircbot.SingleServerIRCBot):
             else:
                 serv.privmsg(chan, author+" "+hit[action]+arguments[1])
 
-        #---[ BIFFLE ]---#
+        # BIFFLE
         if ('!bif' == arguments[0] and level > "2"):
             if (nombreArg == 1):
                 serv.action(chan, " biffle "+author+" !")
@@ -798,7 +809,7 @@ class bot(ircbot.SingleServerIRCBot):
             else:
                 serv.privmsg(chan, author+" biffle "+arguments[1])
 
-        #---[ KISS ]---#
+        # KISS
         if ('!kiss' == arguments[0] and level > "2"):
             action = randrange(0,len(kiss))
             if (nombreArg == 1):
@@ -810,7 +821,7 @@ class bot(ircbot.SingleServerIRCBot):
             else:
                 serv.privmsg(chan, author+" "+kiss[action]+arguments[1])
 
-        #---[ CAFE ]---#
+        # CAFE
         if ('!caf' == arguments[0] and level > "2"):
             if (nombreArg == 1):
                 serv.privmsg(chan, "pas de café pour "+author+" !")
@@ -821,7 +832,7 @@ class bot(ircbot.SingleServerIRCBot):
             else:
                 serv.privmsg(chan, author+" paye son café à "+arguments[1])
 
-        #---[ HUG ]---#
+        # HUG
         if ('!hug' == arguments[0] and level > "2"):
             if (nombreArg == 1):
                 serv.privmsg(chan, "pas de calin pour "+author+" !")
@@ -832,7 +843,7 @@ class bot(ircbot.SingleServerIRCBot):
             else:
                 serv.privmsg(chan, author+" caline "+arguments[1])
 
-        #---[ CHAMP ]---#
+        # CHAMP
         if ('!champ' == arguments[0] and level > "2"):
             if (nombreArg == 1):
                 serv.privmsg(chan, "pas de champagne pour "+author+" !")
@@ -844,7 +855,7 @@ class bot(ircbot.SingleServerIRCBot):
                 serv.privmsg(
                     chan, author+" paye le champagne à "+arguments[1])
 
-        #---[ WOMP ]---#
+        # WOMP
         if ('!womp' == arguments[0] and level > "2"):
             if (nombreArg == 1):
                 serv.privmsg(chan, "http://wompwompwomp.com/ "+author+" :p")
@@ -854,7 +865,7 @@ class bot(ircbot.SingleServerIRCBot):
                 serv.privmsg(
                     chan, "http://wompwompwomp.com/ "+arguments[1]+" :p")
 
-        #---[ GG ]---#
+        # GG
         if ('!gg' == arguments[0] and level > "2"):
             if (nombreArg == 1):
                 error_message()
@@ -865,14 +876,14 @@ class bot(ircbot.SingleServerIRCBot):
             else:
                 serv.privmsg(chan, "Bien joué "+arguments[1]+" ! Congrats !")
 
-        #---[ OUT ]---#
+        # OUT
         if ('!out' == arguments[0] and level > "2"):
             if (nombreArg == 1):
                 serv.privmsg(chan, author+" is out !")
             else:
                 error_message()
 
-        #---[ ISOUT ]---#
+        # ISOUT
         if ('!isout' == arguments[0] and level > "2"):
             if (nombreArg == 1):
                 error_message()
@@ -881,11 +892,11 @@ class bot(ircbot.SingleServerIRCBot):
             else:
                 serv.privmsg(chan, arguments[1]+" is out !")
 
-        #---------------------#
-        #---  IRC OPTIONS  ---#
-        #---------------------#
+        #---------------------
+        #     IRC OPTIONS
+        #---------------------
 
-        #---[ EXEMPT ]---#
+        # EXEMPT
         if ('!e' == arguments[0] and level > "3"):
             if (nombreArg == 1):
                 error_message()
@@ -894,7 +905,7 @@ class bot(ircbot.SingleServerIRCBot):
         elif ('!e' == arguments[0] and level <= "3"):
             powa_message()
 
-        #---[ REMOVE EXEMPT ]---#
+        # REMOVE EXEMPT
         if ('!de' == arguments[0] and level > "3"):
             if (nombreArg == 1):
                 error_message()
@@ -907,7 +918,7 @@ class bot(ircbot.SingleServerIRCBot):
         elif ('!de' == arguments[0] and level <= "3"):
             powa_message()
 
-        #---[ KICK ]---#
+        # KICK
         if ('!k' == arguments[0] and level > "3"):
             if nombreArg == 1:
                 error_message()
@@ -931,7 +942,7 @@ class bot(ircbot.SingleServerIRCBot):
         elif ('!k' == arguments[0] and level <= "3"):
             powa_message()
 
-        #---[ BAN ]---#
+        # BAN
         if ('!b' == arguments[0] and level > "3"):
             if (nombreArg == 1):
                 error_message()
@@ -944,7 +955,7 @@ class bot(ircbot.SingleServerIRCBot):
         elif ('!b' == arguments[0] and level <= "3"):
             powa_message()
 
-        #---[ UNBAN ]---#
+        # UNBAN
         if ('!db' == arguments[0] and level > "3"):
             if (nombreArg == 1):
                 error_message()
@@ -957,7 +968,7 @@ class bot(ircbot.SingleServerIRCBot):
         elif ('!db' == arguments[0] and level <= "3"):
             powa_message()
 
-        #---[ KICK & BAN ]---#
+        # KICK & BAN
         if ('!kb' == arguments[0] and level > "3"):
             if nombreArg == 1:
                 error_message()
@@ -978,7 +989,7 @@ class bot(ircbot.SingleServerIRCBot):
         elif '!kb' == arguments[0] and level <= "3":
             powa_message()
 
-        #---[ VOICE ]---#
+        # VOICE
         if ('!v' == arguments[0] and level > "3"):
             if (nombreArg == 1):
                 error_message()
@@ -994,7 +1005,7 @@ class bot(ircbot.SingleServerIRCBot):
         elif ('!v' == arguments[0] and level <= "3"):
             powa_message()
 
-        #---[ REMOVE VOICE ]---#
+        # REMOVE VOICE
         if ('!dv' == arguments[0] and level > "3"):
             if (nombreArg == 1):
                 error_message()
@@ -1010,7 +1021,7 @@ class bot(ircbot.SingleServerIRCBot):
         elif ('!dv' == arguments[0] and level <= "3"):
             powa_message()
 
-        #---[ HOP ]---#
+        # HOP
         if ('!h' == arguments[0] and level > "3"):
             if (nombreArg == 1):
                 error_message()
@@ -1026,7 +1037,7 @@ class bot(ircbot.SingleServerIRCBot):
         elif ('!h' == arguments[0] and level <= "3"):
             powa_message()
 
-        #---[ REMOVE HOP ]---#
+        # REMOVE HOP
         if ('!dh' == arguments[0] and level > "3"):
             if (nombreArg == 1):
                 error_message()
@@ -1042,7 +1053,7 @@ class bot(ircbot.SingleServerIRCBot):
         elif ('!dh' == arguments[0] and level <= "3"):
             powa_message()
 
-        #---[ OP ]---#
+        # OP
         if ('!op' == arguments[0] and level > "4"):
             if (nombreArg == 1):
                 error_message()
@@ -1058,7 +1069,7 @@ class bot(ircbot.SingleServerIRCBot):
         elif ('!op' == arguments[0] and level <= "4"):
             powa_message()
 
-        #---[ REMOVE OP ]---#
+        # REMOVE OP
         if ('!deop' == arguments[0] and level > "4"):
             if (nombreArg == 1):
                 error_message()
@@ -1074,7 +1085,7 @@ class bot(ircbot.SingleServerIRCBot):
         elif ('!deop' == arguments[0] and level <= "4"):
             powa_message()
 
-        #---[ ADMIN ]---#
+        # ADMIN
         if ('!a' == arguments[0] and level > "5"):
             if (nombreArg == 1):
                 error_message()
@@ -1085,7 +1096,7 @@ class bot(ircbot.SingleServerIRCBot):
         elif ('!a' == arguments[0] and level <= "5"):
             powa_message()
 
-        #---[ REMOVE ADMIN ]---#
+        # REMOVE ADMIN
         if ('!da' == arguments[0] and level > "5"):
             if (nombreArg == 1):
                 error_message()
@@ -1101,7 +1112,7 @@ class bot(ircbot.SingleServerIRCBot):
         elif ('!da' == arguments[0] and level <= "5"):
             powa_message()
 
-        #---[ ACCESS ]---#
+        # ACCESS
         if ('!ax' == arguments[0] and level > "4"):
             if (nombreArg <= 2):
                 error_message()
@@ -1119,7 +1130,7 @@ class bot(ircbot.SingleServerIRCBot):
         elif ('!ax' == arguments[0] and level <= "4"):
             powa_message()
 
-        #---[ REMOVE ACCESS ]---#
+        # REMOVE ACCESS
         if ('!del' == arguments[0] and level > "4"):
             if (nombreArg == 1):
                 error_message()
