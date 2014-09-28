@@ -174,6 +174,7 @@ class bot(ircbot.SingleServerIRCBot):
             uptime = timedelta(seconds=uptime_raw)
             serv.privmsg(chan, "\x02Uptime\x02: up {}".format(uptime))
 
+        # EXIT
         if (author == bot_owner and nombreArg == 1 and '!exit' == arguments[0]):
             serv.disconnect("See you later girls, just need a break !")
             if (kill_bot):
