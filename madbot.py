@@ -7,6 +7,7 @@
 #--------------------------------------------------
 
 import json
+import time
 import irclib
 import ircbot
 import urllib
@@ -30,6 +31,8 @@ from django.utils.encoding import (smart_str, smart_unicode)
     kill_bot
 ) = settings()
 
+bot_start_time = time.time()
+
 
 class bot(ircbot.SingleServerIRCBot):
 
@@ -39,7 +42,6 @@ class bot(ircbot.SingleServerIRCBot):
                 bot_name, bot_description)
 
         self.owner = [bot_owner, bot_name]
-        self.start_time = time.time()
         self.timer = None
 
     def on_welcome(self, serv, ev):
@@ -167,7 +169,8 @@ class bot(ircbot.SingleServerIRCBot):
 
         # UPTIME
         if ('!uptime' == arguments[0] and level > "2" and nombreArg == 1):
-            uptime_raw = round(time.time() - self.start_time)
+            import time
+            uptime_raw = round(time.time() - bot_start_time)
             uptime = timedelta(seconds=uptime_raw)
             serv.privmsg(chan, "\x02Uptime\x02: up {}".format(uptime))
 

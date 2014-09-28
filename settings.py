@@ -1,10 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-#--------------------  [O_o]  ---------------------#
-#     Made with love by grm34 (FRIPOUILLEJACK)     #
-#     ........fripouillejack@gmail.com .......     #
-#--------------------------------------------------#
+#--------------------  [O_o]  ---------------------
+#     Made with love by grm34 (FRIPOUILLEJACK)
+#     ........fripouillejack@gmail.com .......
+#--------------------------------------------------
 """
 
 Specifics bot commands (by b0t PV) :
@@ -54,7 +54,7 @@ def settings():
     database_user = ""
     database_pass = ""
     database_url = ""
-    kill_bit = ""
+    kill_bot = ""
 
     team_users = [
         "", "", "", "", "", "", ""
@@ -187,7 +187,8 @@ def settings():
         channels, nickserv_pass, mysql_host, mysql_user, mysql_pass,
         mysql_db, meteo_api_key, geoips_api_key, google_api_key,
         admin_users, database_user, database_pass, database_url,
-        team_users, bad, slap, hit, sex, kiss, options, utils, help
+        team_users, bad, slap, hit, sex, kiss, options, utils, help,
+        kill_bot
     )
 
     return infos
